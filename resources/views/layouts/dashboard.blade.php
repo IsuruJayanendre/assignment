@@ -33,6 +33,7 @@
   </style>
 </head>
 <body>
+@include('sweetalert::alert')
 
   <!-- Sidebar -->
   <div class="sidebar d-flex flex-column p-3">
@@ -42,7 +43,13 @@
     <a href="#"> Reports</a>
     <a href="#"> Users</a>
     <a href="#">⚙️ Settings</a>
-    <a href="#" class="mt-auto text-danger">🚪 Logout</a>
+    <form method="POST" action="{{ route('logout') }}" class="mt-auto">
+    @csrf
+    <button type="submit" class="btn btn-link text-danger text-decoration-none w-100 text-start">
+        🚪 Logout
+    </button>
+</form>
+
   </div>
 
   <!-- Main Content -->

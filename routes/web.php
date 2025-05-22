@@ -28,7 +28,12 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    //
+    //dashboard
     Route::get('/dash', [DashboardConroller::class, 'dashboard']);
+
+    //person
     Route::get('/person', [PersonController::class, 'index'])->name('person.index');
+    Route::get('/person/create', [PersonController::class, 'create'])->name('person.create');
+    Route::post('/person/store', [PersonController::class, 'store'])->name('person.store');
+    Route::get('/person/edit/{id}', [PersonController::class, 'edit'])->name('person.edit');
 });

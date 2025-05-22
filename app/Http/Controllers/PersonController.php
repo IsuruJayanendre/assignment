@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Person;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PersonController extends Controller
 {
@@ -21,7 +22,7 @@ class PersonController extends Controller
      */
     public function create()
     {
-        //
+        return view('person.create');
     }
 
     /**
@@ -29,7 +30,35 @@ class PersonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'nic'      => 'required|string|max:12|unique:people,nic', // unique nic
+            'dob'      => 'required|date',
+            'gender'   => 'required|in:male,female,other',
+            'religion' => 'nullable|string|max:100',
+            'address'  => 'required|string|max:500',
+            'phone'    => 'required|string|max:15',
+            'email'    => 'required|email|max:255',
+        ]);
+
+        try {
+            Person::create([
+                'name'     => $request->name,
+                'nic'      => $request->nic,
+                'dob'      => $request->dob,
+                'gender'   => $request->gender,
+                'religion' => $request->religion,
+                'address'  => $request->address,
+                'phone'    => $request->phone,
+                'email'    => $request->email,
+            ]);
+
+            Alert::success('Success', 'Record created successfully.');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Something went wrong! ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -43,17 +72,48 @@ class PersonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Person $person)
+    public function edit(Person $person, $id)
     {
-        //
+        $person=person::findOrfail($id);
+        return view('person.edit', compact('person'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Person $person)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'nic' => 'required|string|max:20|unique:people,nic,' . $id,
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'religion' => 'nullable|string|max:100',
+            'address' => 'required|string',
+            'phone' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+        ]);
+
+        try {
+            $person = Person::findOrFail($id);
+
+            $person->update([
+                'name' => $request->name,
+                'nic' => $request->nic,
+                'dob' => $request->dob,
+                'gender' => $request->gender,
+                'religion' => $request->religion,
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'email' => $request->email,
+            ]);
+
+            Alert::success('Updated!', 'Person details updated successfully.');
+            return redirect()->route('person.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Something went wrong: ' . $e->getMessage());
+            return back()->withInput();
+        }
     }
 
     /**
