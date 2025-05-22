@@ -119,8 +119,17 @@ class PersonController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Person $person)
+    public function destroy($id)
     {
-        //
+        try {
+        $person = Person::findOrFail($id);
+        $person->delete();
+
+        Alert::success('Deleted!', 'Person has been deleted successfully.');
+        return redirect()->route('person.index');
+    } catch (\Exception $e) {
+        Alert::error('Error', 'Failed to delete person: ' . $e->getMessage());
+        return redirect()->route('person.index');
+    }
     }
 }

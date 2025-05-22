@@ -4,9 +4,9 @@
 
 @section('content')
   
-  <form action="{{ route('person.store') }}" method="POST">
+  <form action="{{ route('person.update', $person->id) }}" method="POST">
     @csrf
-
+    @method('PUT')
     <div class="mb-3">
         <label for="name" class="form-label">Full Name</label>
         <input type="text" name="name" value="{{ $person->name }}" class="form-control" id="name" required>

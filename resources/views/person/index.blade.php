@@ -30,8 +30,15 @@
       <td>{{ $person->nic }}</td>
       <td>{{ $person->email }}</td>
       <td>
-        <a href="{{ route('person.edit', $person->id) }}" class="btn btn-warning">Edit</a>
-        <button href="" class="btn btn-danger">delete</button>
+        <div class="d-flex gap-2 align-items-center">
+            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-dark">View</a>
+            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-warning">Edit</a>
+            <form action="{{ route('person.destroy', $person->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this person?');" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
       </td>
     </tr>
     @endforeach
