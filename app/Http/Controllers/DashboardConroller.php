@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Person;
+use App\Models\Religion;
 use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
@@ -10,10 +11,9 @@ class DashboardConroller extends Controller
 {
     public function dashboard()
     {
-
-        //row count
+        // Row count
         $totalPeople = Person::count();
-        
+
         // Age Groups
         $now = Carbon::now();
         $ageGroups = [
@@ -40,15 +40,25 @@ class DashboardConroller extends Controller
             $month = Carbon::parse($person->dob)->month;
             $birthMonths[$month]++;
         }
-
-        // Convert month number to name
         $monthLabels = array_map(fn($m) => Carbon::create()->month($m)->format('F'), array_keys($birthMonths));
 
+        // Religion Counts
+        $religions = Religion::all();
+        $religionLabels = [];
+        $religionCounts = [];
+
+        foreach ($religions as $religion) {
+            $religionLabels[] = $religion->name;
+            $religionCounts[] = Person::where('religion_id', $religion->id)->count(); // assuming 'religion' is FK
+        }
+
         return view('dashboard', [
+            'totalPeople' => $totalPeople,
             'ageGroups' => $ageGroups,
             'monthLabels' => $monthLabels,
             'monthCounts' => array_values($birthMonths),
-            'totalPeople' => $totalPeople,
+            'religionLabels' => $religionLabels,
+            'religionCounts' => $religionCounts,
         ]);
     }
 

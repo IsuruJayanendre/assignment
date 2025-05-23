@@ -47,16 +47,18 @@
     </div>
 
 
-    <script>
+    <canvas id="barChart"></canvas>
+
+<script>
     const ctx = document.getElementById('barChart').getContext('2d');
 
     const barChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Buddhist', 'Hindu', 'Muslim', 'Christian', 'Other'],
+            labels: {!! json_encode($religionLabels) !!},
             datasets: [{
                 label: 'Registered People',
-                data: [23, 15, 8, 12, 4], // Replace with dynamic values from backend
+                data: {!! json_encode($religionCounts) !!},
                 backgroundColor: '#0d6efd'
             }]
         },
@@ -75,6 +77,7 @@
         }
     });
 </script>
+
 
 <script>
     // Age Group Pie Chart
