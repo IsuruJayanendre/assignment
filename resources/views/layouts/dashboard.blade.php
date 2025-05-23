@@ -38,7 +38,7 @@
   <!-- Sidebar -->
   <div class="sidebar d-flex flex-column p-3">
     <h4 class="text-center">My Dashboard</h4>
-    <a href="#"> Dashboard</a>
+    <a href="/dash"> Dashboard</a>
     <a href="{{ route('person.index') }}"> People</a>
     <a href="#"> Reports</a>
     <a href="#"> Users</a>

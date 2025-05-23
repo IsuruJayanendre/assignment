@@ -9,6 +9,7 @@ class DashboardConroller extends Controller
 {
     public function dashboard()
     {
-        return view('dashboard');
+        $count = Person::count();
+        return view('dashboard', compact('count'));
     }
 }

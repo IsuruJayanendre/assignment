@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 
 class PersonController extends Controller
 {
@@ -54,7 +55,7 @@ class PersonController extends Controller
             ]);
 
             Alert::success('Success', 'Record created successfully.');
-            return redirect()->back();
+            return redirect()->route('person.index');
         } catch (\Exception $e) {
             Alert::error('Error', 'Something went wrong! ' . $e->getMessage());
             return redirect()->back()->withInput();
@@ -64,9 +65,11 @@ class PersonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Person $person)
+    public function show(Person $person, $id)
     {
-        //
+        $person=person::findOrfail($id);
+        $age = Carbon::parse($person->dob)->age;
+        return view('person.view', compact('person', 'age'));
     }
 
     /**
@@ -132,4 +135,26 @@ class PersonController extends Controller
         return redirect()->route('person.index');
     }
     }
+
+    public function search(Request $request)
+    {
+        $query = Person::query();
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('nic')) {
+            $query->where('nic', 'like', '%' . $request->nic . '%');
+        }
+
+        if ($request->filled('dob')) {
+            $query->whereDate('dob', $request->dob);
+        }
+
+        $people = $query->get();
+
+        return view('person.partials.people-table', compact('people'))->render();
+    }
+
 }

@@ -3,46 +3,74 @@
 @section('title', 'Dashboard')
 
 @section('content')
-  <h2>Dashboard Overview</h2>
-  <p>This is your main dashboard content area.</p>
 
-  <div class="text-end">
+ <div class="text-end">
     <a href="{{ route('person.create') }}" class="btn btn-primary">Register person</a>
     <br>
     <br>
   </div>
 
-  <table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">NIC</th>
-      <th scope="col">E-mail</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach ( $people as $person )
-    <tr>
-      <th scope="row">{{ $person->id }}</th>
-      <td>{{ $person->name }}</td>
-      <td>{{ $person->nic }}</td>
-      <td>{{ $person->email }}</td>
-      <td>
-        <div class="d-flex gap-2 align-items-center">
-            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-dark">View</a>
-            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-warning">Edit</a>
-            <form action="{{ route('person.destroy', $person->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this person?');" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+  <div class="row">
+    <div class="col">
+        <div class="mb-3">
+            <label for="search-nic" class="form-label">National ID Number</label>
+            <input type="text" id="search-nic" class="form-control">
         </div>
-      </td>
-    </tr>
-    @endforeach
-  </tbody>
+    </div>
+    <div class="col">
+        <div class="mb-3">
+            <label for="search-name" class="form-label">Full Name</label>
+            <input type="text" id="search-name" class="form-control">
+        </div>
+    </div>
+    <div class="col">
+        <div class="mb-3">
+            <label for="search-dob" class="form-label">Date of Birth</label>
+            <input type="date" id="search-dob" class="form-control">
+        </div>
+    </div>
+</div>
+
+  <table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>NIC</th>
+            <th>DOB</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="people-table-body">
+        @foreach($people as $person)
+            @include('person.partials.person-row', ['person' => $person])
+        @endforeach
+    </tbody>
 </table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const nameInput = document.getElementById('search-name');
+    const nicInput = document.getElementById('search-nic');
+    const dobInput = document.getElementById('search-dob');
+
+    [nameInput, nicInput, dobInput].forEach(input => {
+        input.addEventListener('input', fetchFilteredData);
+    });
+
+    function fetchFilteredData() {
+        const name = nameInput.value;
+        const nic = nicInput.value;
+        const dob = dobInput.value;
+
+        fetch(`/person/search?name=${name}&nic=${nic}&dob=${dob}`)
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById('people-table-body').innerHTML = data;
+            });
+    }
+});
+</script>
+
 
 @endsection
