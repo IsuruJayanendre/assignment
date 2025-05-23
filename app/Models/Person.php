@@ -13,11 +13,22 @@ class Person extends Model
         'name',
         'nic',
         'dob',
-        'gender',
-        'religion',
+        'gender_id',
+        'religion_id',
         'address',
         'phone',
         'email',
     ];
+
+    public function gender()
+    {
+        return $this->belongsTo(Gender::class);
+    }
+
+    public function religion()
+    {
+        return $this->belongsTo(Religion::class,);
+    }
+
 
 }

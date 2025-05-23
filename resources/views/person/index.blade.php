@@ -4,11 +4,15 @@
 
 @section('content')
 
+@if (Auth::user()->user_type == '1')
+
  <div class="text-end">
     <a href="{{ route('person.create') }}" class="btn btn-primary">Register person</a>
     <br>
     <br>
   </div>
+
+@endif
 
   <div class="row">
     <div class="col">

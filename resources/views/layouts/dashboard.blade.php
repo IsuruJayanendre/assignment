@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>@yield('title', 'Dashboard')</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       min-height: 100vh;
@@ -40,8 +41,12 @@
     <h4 class="text-center">My Dashboard</h4>
     <a href="/dash"> Dashboard</a>
     <a href="{{ route('person.index') }}"> People</a>
-    <a href="#"> Reports</a>
-    <a href="#"> Users</a>
+
+    @if (Auth::user()->user_type == '1')
+    <a href="{{ route('religion.index') }}"> Religions</a>
+    <a href="{{ route('gender.index') }}"> Genders</a>
+    @endif
+    
     <a href="#">⚙️ Settings</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-auto">
     @csrf

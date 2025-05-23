@@ -17,7 +17,8 @@
         <div class="col">
             <div class="mb-3">
                 <label for="nic" class="form-label">National ID Number</label>
-                <input type="text" name="nic" value="{{ $person->nic }}" class="form-control" id="nic" required>
+                <input type="text" name="nic" value="{{ $person->nic }}" class="form-control" id="nic" required readonly>
+                <div id="emailHelp" class="form-text text-danger">You can not change NIC Number once created.</div>
                 @error('nic') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
         </div>
@@ -32,26 +33,31 @@
 
     <div class="row">
         <div class="col">
-            <label class="form-label">Gender</label>
-            <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="male" value="male"
-                {{ (old('gender', $person->gender) == 'male') ? 'checked' : '' }} required>
-            <label class="form-check-label" for="male">Male</label>
-        </div>
+            <div class="mb-3">
+                <label for="religion" class="form-label">Religion</label>
+                <select class="form-select" aria-label="Default select example" name="gender">
 
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="female" value="female"
-                {{ (old('gender', $person->gender) == 'female') ? 'checked' : '' }}>
-            <label class="form-check-label" for="female">Female</label>
-        </div>
+                @foreach ($genders as $gender)
+                    <option value="{{ $gender->id }}" {{ $person->gender_id == $gender->id ? 'selected' : '' }}>
+                        {{ $gender->name }}
+                    </option>
+                @endforeach
+
+                </select>
+            </div>
 
             @error('gender') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
         <div class="col">
             <div class="mb-3">
                 <label for="religion" class="form-label">Religion</label>
-                <input type="text" name="religion" value="{{ $person->religion }}" class="form-control" id="religion">
-                @error('religion') <small class="text-danger">{{ $message }}</small> @enderror
+                <select class="form-select" aria-label="Default select example" name="religion">
+                @foreach ( $religions as $religion )  
+                <option value="{{ $religion->id }}" {{ $person->religion_id == $religion->id ? 'selected' : ''}}>
+                    {{ $religion->name }}
+                </option>
+                @endforeach
+                </select>
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use App\Models\Religion;
+use App\Models\Gender;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
@@ -23,7 +25,9 @@ class PersonController extends Controller
      */
     public function create()
     {
-        return view('person.create');
+        $genders=Gender::all();
+        $religions=Religion::all();
+        return view('person.create', compact('religions','genders'));
     }
 
     /**
@@ -35,7 +39,7 @@ class PersonController extends Controller
             'name'     => 'required|string|max:255',
             'nic'      => 'required|string|max:12|unique:people,nic', // unique nic
             'dob'      => 'required|date',
-            'gender'   => 'required|in:male,female,other',
+            'gender'   => 'required',
             'religion' => 'nullable|string|max:100',
             'address'  => 'required|string|max:500',
             'phone'    => 'required|string|max:15',
@@ -47,8 +51,8 @@ class PersonController extends Controller
                 'name'     => $request->name,
                 'nic'      => $request->nic,
                 'dob'      => $request->dob,
-                'gender'   => $request->gender,
-                'religion' => $request->religion,
+                'gender_id'   => $request->gender,
+                'religion_id' => $request->religion,
                 'address'  => $request->address,
                 'phone'    => $request->phone,
                 'email'    => $request->email,
@@ -65,10 +69,11 @@ class PersonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Person $person, $id)
+    public function show($id)
     {
-        $person=person::findOrfail($id);
+        $person = Person::with('gender')->findOrFail($id);
         $age = Carbon::parse($person->dob)->age;
+
         return view('person.view', compact('person', 'age'));
     }
 
@@ -77,8 +82,10 @@ class PersonController extends Controller
      */
     public function edit(Person $person, $id)
     {
+        $genders=Gender::all();
+        $religions=Religion::all();
         $person=person::findOrfail($id);
-        return view('person.edit', compact('person'));
+        return view('person.edit', compact('person','religions','genders'));
     }
 
     /**
@@ -90,7 +97,7 @@ class PersonController extends Controller
             'name' => 'required|string|max:255',
             'nic' => 'required|string|max:20|unique:people,nic,' . $id,
             'dob' => 'required|date',
-            'gender' => 'required|in:male,female',
+            'gender' => 'required',
             'religion' => 'nullable|string|max:100',
             'address' => 'required|string',
             'phone' => 'required|string|max:15',
@@ -104,8 +111,8 @@ class PersonController extends Controller
                 'name' => $request->name,
                 'nic' => $request->nic,
                 'dob' => $request->dob,
-                'gender' => $request->gender,
-                'religion' => $request->religion,
+                'gender_id' => $request->gender,
+                'religion_id' => $request->religion,
                 'address' => $request->address,
                 'phone' => $request->phone,
                 'email' => $request->email,

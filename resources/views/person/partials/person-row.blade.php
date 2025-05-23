@@ -9,7 +9,7 @@
 
             @if (Auth::user()->user_type == '1')
 
-            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-warning">Edit</a>
+            <a href="{{ route('person.edit', $person->id) }}" class="btn btn-success">Edit</a>
             <form action="{{ route('person.destroy', $person->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this person?');" style="display:inline;">
                 @csrf
                 @method('DELETE')

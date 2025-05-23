@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardConroller;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\ReligionController;
+use App\Http\Controllers\GenderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,5 +44,18 @@ Route::middleware([
 
     //search
     Route::get('/person/search', [PersonController::class, 'search'])->name('person.search');
+
+    //religion
+    Route::get('/religion', [ReligionController::class, 'index'])->name('religion.index');
+    Route::post('/religion/store', [ReligionController::class, 'store'])->name('religion.store');
+    Route::put('/religion/{id}', [ReligionController::class, 'update'])->name('religion.update');
+    Route::delete('/religion/{id}', [ReligionController::class, 'destroy'])->name('religion.destroy');
+
+    //gender
+    Route::get('/gender', [GenderController::class, 'index'])->name('gender.index');
+    Route::post('/gender/store', [GenderController::class, 'store'])->name('gender.store');
+    Route::put('/gender/{id}', [GenderController::class, 'update'])->name('gender.update');
+    Route::delete('/gender/{id}', [GenderController::class, 'destroy'])->name('gender.destroy');
+    
 
 });

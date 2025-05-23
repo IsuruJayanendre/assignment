@@ -33,21 +33,28 @@
     <div class="row">
         <div class="col">
             <label class="form-label">Gender</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="male" value="male" {{ old('gender') == 'male' ? 'checked' : '' }} required>
-                <label class="form-check-label" for="male">Male</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="female" value="female" {{ old('gender') == 'female' ? 'checked' : '' }}>
-                <label class="form-check-label" for="female">Female</label>
+            <div class="mb-3">
+                
+                <select class="form-select" aria-label="Default select example" name="gender">
+
+                @foreach ( $genders as $gender )  
+                <option value="{{ $gender->id }}">{{ $gender->name }}</option>
+                @endforeach
+
+                </select>
             </div>
             @error('gender') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
         <div class="col">
             <div class="mb-3">
                 <label for="religion" class="form-label">Religion</label>
-                <input type="text" name="religion" value="{{ old('religion') }}" class="form-control" id="religion">
-                @error('religion') <small class="text-danger">{{ $message }}</small> @enderror
+                <select class="form-select" aria-label="Default select example" name="religion">
+
+                @foreach ( $religions as $religion )  
+                <option value="{{ $religion->id }}">{{ $religion->name }}</option>
+                @endforeach
+
+                </select>
             </div>
         </div>
     </div>
